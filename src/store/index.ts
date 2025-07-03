@@ -1,11 +1,18 @@
 import { createStore } from "vuex";
 import { createApp } from "vue";
+import editor, { type EditorProps } from "./editor";
+
+export interface GlobalDataProps {
+  user: any;
+  // user: UserProps;
+  // templates: TemplateProps,
+  editor: EditorProps
+}
 
 const store = createStore({
-  state: {},
-  mutations: {},
-  actions: {},
-  getters: {},
+  modules: {
+    editor
+  }
 });
 
 const app = createApp({});
