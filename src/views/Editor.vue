@@ -2,7 +2,6 @@
   <div class="editor-container">
     <a-layout>
       <a-layout-sider width="300" style="background: #fff">
-        <div>左边</div>
         <components-list @onItemClick="addItem" />
       </a-layout-sider>
       <a-layout class="editor-container">
@@ -10,6 +9,7 @@
           <edit-wrapper
             @setActive="setActive(component.id)"
             v-for="component in components"
+            :id="component.id"
             :active="component.id === (currentComponent && currentComponent.id)"
             :key="component.id"
           >
@@ -22,6 +22,7 @@
           <props-table
             v-if="currentComponent && currentComponent.props"
             :props="currentComponent.props"
+            @change="handleChange"
           />
           <pre>{{ currentComponent && currentComponent.props }}</pre>
         </div>
@@ -31,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "../store";
 import HelloWorld from "../components/HelloWorld.vue";
@@ -39,14 +40,15 @@ import LText from "../components/LText.vue";
 import ComponentsList from "../components/ComponentsList.vue";
 import EditWrapper from "../components/EditWrapper.vue";
 import { ComponentData } from "../store/editor";
-import propsTable from "../components/propsTable.vue";
+import PropsTable from "../components/propsTable.vue";
+
 export default defineComponent({
   components: {
     HelloWorld,
     LText,
     ComponentsList,
     EditWrapper,
-    propsTable,
+    PropsTable,
   },
   setup() {
     const store = useStore<GlobalDataProps>();
@@ -60,11 +62,15 @@ export default defineComponent({
     const currentComponent = computed<ComponentData | null>(
       () => store.getters.getCurrentElement
     );
+    const handleChange = (data: any) => {
+      store.commit("updateComponent", data);
+    };
     return {
       components,
       currentComponent,
       addItem,
       setActive,
+      handleChange,
     };
   },
 });

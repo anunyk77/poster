@@ -14,6 +14,7 @@
 import { defineComponent } from "vue";
 import LText from "./LText.vue";
 import defaultTextTemplates from "../defaultTemplate";
+import { cloneDeep } from "lodash-es";
 export default defineComponent({
   components: {
     LText,
@@ -21,7 +22,8 @@ export default defineComponent({
   emits: ["on-item-click"],
   setup(props, context) {
     const onItemClick = (data: any) => {
-      context.emit("on-item-click", data);
+      const item = cloneDeep(data)
+      context.emit("on-item-click", item);
     };
     return {
       defaultTextTemplates,
