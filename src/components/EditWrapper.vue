@@ -1,7 +1,7 @@
 <template lang="">
   <div
     class="edit-wrapper"
-    :class="{ active: active }"
+    :class="{ active: active, isHidden: isHidden }"
     @click="onItemClick(id)"
   >
     <slot></slot>
@@ -19,6 +19,10 @@ export default defineComponent({
     active: {
       type: Boolean,
       defual: false,
+    },
+    isHidden: {
+      type: Boolean,
+      default: true,
     },
   },
   emits: ["set-active"],
@@ -40,6 +44,9 @@ export default defineComponent({
   }
   &.active {
     border: 1px solid #73b0ed;
+  }
+  &.isHidden {
+    display: none;
   }
 }
 </style>

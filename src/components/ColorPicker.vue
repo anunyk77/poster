@@ -5,7 +5,7 @@
         v-if="value.startsWith('#')"
         type="color"
         :value="value"
-        @input="onChange($event.target.value)"
+        @input="onChange(($event.target as HTMLInputElement).value)"
       />
       <div  v-else class="input-container">
         <div class="transparent-back"></div>

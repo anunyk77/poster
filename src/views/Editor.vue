@@ -10,7 +10,8 @@
             @setActive="setActive(component.id)"
             v-for="component in components"
             :id="component.id"
-            :active="component.id === (currentComponent && currentComponent.id)"
+            :active="component.id === (currentElement && currentElement.id)"
+            :isHidden="component.isHidden"
             :key="component.id"
           >
             <component :is="component.name" v-bind="component.props" />
@@ -19,12 +20,30 @@
       </a-layout>
       <a-layout-sider width="300" style="background-color: #fff">
         <div>
-          <props-table
-            v-if="currentComponent && currentComponent.props"
-            :props="currentComponent.props"
-            @change="handleChange"
-          />
-          <pre>{{ currentComponent && currentComponent.props }}</pre>
+          <a-tabs v-model:activeKey="activeKey">
+            <a-tab-pane key="basic" tab="基础类型">
+              <div v-if="currentElement">
+                <div v-if="!currentElement.isLocked">
+                  <props-table
+                    :props="currentElement.props"
+                    @change="handleChange"
+                  />
+                </div>
+                <div v-else>
+                  <a-empty description="锁定状态不允许修改" />
+                </div>
+                <pre>{{ currentElement && currentElement.props }}</pre>
+              </div>
+            </a-tab-pane>
+            <a-tab-pane key="layer" tab="图层类型">
+              <layer-list
+                :list="components"
+                :selectedId="currentElement && currentElement.id"
+                @change="handleChange"
+                @select="setActive"
+              />
+            </a-tab-pane>
+          </a-tabs>
         </div>
       </a-layout-sider>
     </a-layout>
@@ -41,6 +60,7 @@ import ComponentsList from "../components/ComponentsList.vue";
 import EditWrapper from "../components/EditWrapper.vue";
 import { ComponentData } from "../store/editor";
 import PropsTable from "../components/propsTable.vue";
+import LayerList from "../components/LayerList.vue";
 
 export default defineComponent({
   components: {
@@ -49,6 +69,7 @@ export default defineComponent({
     ComponentsList,
     EditWrapper,
     PropsTable,
+    LayerList,
   },
   setup() {
     const store = useStore<GlobalDataProps>();
@@ -59,15 +80,17 @@ export default defineComponent({
     const setActive = (currentId: string) => {
       store.commit("setActive", currentId);
     };
-    const currentComponent = computed<ComponentData | null>(
+    const currentElement = computed<ComponentData | null>(
       () => store.getters.getCurrentElement
     );
     const handleChange = (data: any) => {
       store.commit("updateComponent", data);
     };
+    const activeKey = ref("basic");
     return {
+      activeKey,
       components,
-      currentComponent,
+      currentElement,
       addItem,
       setActive,
       handleChange,
