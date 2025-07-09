@@ -8,11 +8,13 @@
         <div class="editor-warp">
           <edit-wrapper
             @setActive="setActive(component.id)"
+            @updatePosition="updatePosition"
             v-for="component in components"
             :id="component.id"
             :active="component.id === (currentElement && currentElement.id)"
             :isHidden="component.isHidden"
             :key="component.id"
+            :props="component.props"
           >
             <component :is="component.name" v-bind="component.props" />
           </edit-wrapper>
@@ -94,6 +96,11 @@ export default defineComponent({
     const handleChange = (data: any) => {
       store.commit("updateComponent", data);
     };
+    // 更新定位 left / top
+    const updatePosition = ({ left, top, id }) => {
+      store.commit("updateComponent", { key: "left", value: left + "px", id });
+      store.commit("updateComponent", { key: "top", value: top + "px", id });
+    };
     const activeKey = ref("basic");
 
     return {
@@ -102,6 +109,7 @@ export default defineComponent({
       currentElement,
       addItem,
       setActive,
+      updatePosition,
       handleChange,
     };
   },
