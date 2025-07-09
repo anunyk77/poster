@@ -1,7 +1,8 @@
 import type { Module } from 'vuex';
 import { v4 as uuidv4 } from 'uuid';
 import { type GlobalDataProps } from './index';
-import { TextComponentProps } from '../defaultProps'
+import { AllComponentProps, TextComponentProps } from '../defaultProps'
+
 export interface EditorProps {
   // 渲染的组件列表
   components: ComponentData[];
@@ -30,7 +31,7 @@ export const testComponents: ComponentData[] = [
     props: { text: 'Hello World', fontSize: '20px', color: 'red' },
     isHidden: false,
     isLocked: false,
-    layerName: '图层1'
+    layerName: '图层1',
   },
   // { id: uuidv4(), name: 'l-text', props: { text: 'Hello World2', fontSize: '10px', fontWeight: '900' } },
   // { id: uuidv4(), name: 'l-text', props: { text: 'Hello World3', fontSize: '15px', actionType: 'url', url: 'www.baidu.com' } },
@@ -43,13 +44,59 @@ const editor: Module<EditorProps, GlobalDataProps> = {
   },
   mutations: {
     addComponent(state, props: Partial<TextComponentProps>) {
-      const newComponent: ComponentData = {
+      // const newComponent: ComponentData = {
+      //   id: uuidv4(),
+      //   name: 'l-text',
+      //   props,
+      //   isHidden: false,
+      //   isLocked: false,
+      //   layerName: `图层${state.components.length + 1}`,
+      // }
+      const newComponent: AllComponentProps | ComponentData = {
         id: uuidv4(),
         name: 'l-text',
         props,
         isHidden: false,
         isLocked: false,
-        layerName: `图层${state.components.length + 1}`
+        layerName: `图层${state.components.length + 1}`,
+
+        actionType: '',
+        url: '',
+        // size
+        height: '100',
+        width: '100',
+        paddingLeft: '0',
+        paddingRight: '0',
+        paddingTop: '0',
+        paddingBottom: '0',
+        // border type
+        borderStyle: 'none',
+        borderColor: '',
+        borderWidth: '0',
+        borderRadius: '0',
+        // shadow and opacity
+        boxShadow: '0 0 0 #000000',
+        opacity: '1',
+        // position and x,y
+        // position: 'absolute',
+        // left: '0',
+        // top: '0',
+        // right: '0',
+        position: '',
+        left: '',
+        top: '',
+        right: '',
+        text: '包含全部内容',
+        fontSize: '14px',
+        fontFamily: '',
+        fontWeight: 'normal',
+        fontStyle: '',
+        textDecoration: 'none',
+        lineHeight: '1',
+        textAlign: 'left',
+        color: '#000000',
+        backgroundColor: '',
+        src: 'test.url',
       }
       state.components.push(newComponent)
     },

@@ -65,6 +65,10 @@ export interface TextComponentProps extends CommonComponentProps {
   color: string;
   backgroundColor: string;
 }
+export interface ImageComponentProps extends CommonComponentProps {
+  src: string
+}
+export type AllComponentProps = TextComponentProps & ImageComponentProps
 export const textDefaultProps: TextComponentProps = {
   text: '正文内容',
   fontSize: '14px',
@@ -78,7 +82,13 @@ export const textDefaultProps: TextComponentProps = {
   backgroundColor: '',
   ...commonDefaultProps
 }
+export const ImageDefaultProps: ImageComponentProps = {
+  src: 'test.url',
+  ...commonDefaultProps
+}
+
 export const textStylePropNames = without(Object.keys(textDefaultProps), 'actionType', 'url', 'text')
+export const imageStylePropsNames = without(Object.keys(ImageDefaultProps), 'src')
 export const transformToComponentProps = (props: TextComponentProps) => {
   return mapValues(props, (item) => {
     return {

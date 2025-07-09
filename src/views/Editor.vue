@@ -23,15 +23,21 @@
           <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="basic" tab="基础类型">
               <div v-if="currentElement">
-                <div v-if="!currentElement.isLocked">
+                <edit-group
+                  v-if="!currentElement.isLocked"
+                  :props="currentElement.props"
+                  @change="handleChange"
+                />
+                <div v-else>
+                  <a-empty description="锁定状态不允许修改" />
+                </div>
+                <!-- <div v-if="!currentElement.isLocked">
                   <props-table
                     :props="currentElement.props"
                     @change="handleChange"
                   />
-                </div>
-                <div v-else>
-                  <a-empty description="锁定状态不允许修改" />
-                </div>
+                </div> -->
+
                 <pre>{{ currentElement && currentElement.props }}</pre>
               </div>
             </a-tab-pane>
@@ -51,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, ref, nextTick } from "vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "../store";
 import HelloWorld from "../components/HelloWorld.vue";
@@ -61,6 +67,7 @@ import EditWrapper from "../components/EditWrapper.vue";
 import { ComponentData } from "../store/editor";
 import PropsTable from "../components/propsTable.vue";
 import LayerList from "../components/LayerList.vue";
+import EditGroup from "../components/EditGroup.vue";
 
 export default defineComponent({
   components: {
@@ -70,6 +77,7 @@ export default defineComponent({
     EditWrapper,
     PropsTable,
     LayerList,
+    EditGroup,
   },
   setup() {
     const store = useStore<GlobalDataProps>();
@@ -87,6 +95,7 @@ export default defineComponent({
       store.commit("updateComponent", data);
     };
     const activeKey = ref("basic");
+
     return {
       activeKey,
       components,
