@@ -16,7 +16,10 @@
             :key="component.id"
             :props="component.props"
           >
-            <component :is="component.name" v-bind="component.props" />
+            <component
+              :is="component.name"
+              v-bind="getComponentProps(component.props)"
+            />
           </edit-wrapper>
         </div>
       </a-layout>
@@ -62,6 +65,7 @@
 import { computed, defineComponent, ref, nextTick } from "vue";
 import { useStore } from "vuex";
 import { GlobalDataProps } from "../store";
+import { omit } from "lodash-es";
 import HelloWorld from "../components/HelloWorld.vue";
 import LText from "../components/LText.vue";
 import ComponentsList from "../components/ComponentsList.vue";
@@ -97,11 +101,17 @@ export default defineComponent({
       store.commit("updateComponent", data);
     };
     // 更新定位 left / top
-    const updatePosition = ({ left, top, id }) => {
-      store.commit("updateComponent", { key: "left", value: left + "px", id });
-      store.commit("updateComponent", { key: "top", value: top + "px", id });
+    const updatePosition = ({ left, top, width, height, id }) => {
+      left &&store.commit("updateComponent", {key: "left",value: left + "px",id,});
+      top &&store.commit("updateComponent", { key: "top", value: top + "px", id });
+      width &&store.commit("updateComponent", {key: "width",value: width + "px",id,});
+      height &&store.commit("updateComponent", {key: "height",value: height + "px",id,});
     };
     const activeKey = ref("basic");
+
+    const getComponentProps = (props) => {
+      return omit(props, ["position", "top", "left", "width", "height"]);
+    };
 
     return {
       activeKey,
@@ -110,6 +120,7 @@ export default defineComponent({
       addItem,
       setActive,
       updatePosition,
+      getComponentProps,
       handleChange,
     };
   },

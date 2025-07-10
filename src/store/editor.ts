@@ -11,7 +11,7 @@ export interface EditorProps {
 }
 export interface ComponentData {
   // 元素的属性
-  props: { [key: string]: any }
+  props: Partial<AllComponentProps>
   // uuid
   id: string
   // 业务组件名称 l-text
@@ -93,10 +93,6 @@ const editor: Module<EditorProps, GlobalDataProps> = {
           left: '0',
           top: '0',
           right: '0',
-          // position: '',
-          // left: '',
-          // top: '',
-          // right: '',
           text: '包含全部内容',
           fontSize: '14px',
           fontFamily: '',
