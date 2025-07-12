@@ -44,14 +44,10 @@ export const commonDefaultProps: CommonComponentProps = {
   boxShadow: '0 0 0 #000000',
   opacity: '1',
   // position and x,y
-  // position: 'absolute',
-  // left: '0',
-  // top: '0',
-  // right: '0',
-  position: '',
-  left: '',
-  top: '',
-  right: '',
+  position: 'absolute',
+  left: '0',
+  top: '0',
+  right: '0',
 }
 export interface TextComponentProps extends CommonComponentProps {
   text: string;

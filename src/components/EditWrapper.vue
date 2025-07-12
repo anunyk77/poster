@@ -67,6 +67,11 @@ type resizeDirection =
   | "left"
   | "top-left";
 
+const minSize = {
+  width: 40,
+  height: 40,
+};
+
 export default defineComponent({
   props: {
     id: {
@@ -209,6 +214,13 @@ export default defineComponent({
       const getTop = () => {
         let newTop = top + disY;
         let newHeight = height - disY;
+        // 最小值限制
+        if (disY > height - minSize.height) {
+          newTop = top + height - minSize.height;
+        }
+        if (newHeight < minSize.height) {
+          newHeight = minSize.height;
+        }
         return {
           top: newTop,
           height: newHeight,
@@ -217,19 +229,32 @@ export default defineComponent({
       const getLeft = () => {
         let newLeft = left + disX;
         let newWidth = width - disX;
+        // 最小值限制
+        if (disX > width - minSize.width) {
+          newLeft = left + width - minSize.width;
+        }
+        if (newWidth < minSize.width) {
+          newWidth = minSize.width;
+        }
         return {
           width: newWidth,
           left: newLeft,
         };
       };
       const getBottom = () => {
-        const newHeight = height + disY;
+        let newHeight = height + disY;
+        if (newHeight < minSize.height) {
+          newHeight = minSize.height;
+        }
         return {
           height: newHeight,
         };
       };
       const getRight = () => {
-        const newWidth = width + disX;
+        let newWidth = width + disX;
+        if (newWidth < minSize.width) {
+          newWidth = minSize.width;
+        }
         return {
           width: newWidth,
         };

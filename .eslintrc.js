@@ -20,12 +20,12 @@ module.exports = {
   },
   plugins: ["vue", "@typescript-eslint"],
     rules: {
-    "vue/max-attributes-per-line": [2, {
-      "singleline": 10,
-      "multiline": {
-        "max": 1,
-        "allowFirstLine": false
-      }
-    }],
+      "vue/max-attributes-per-line": [2, {
+        "singleline": 10,
+        "multiline": {
+          "max": 1,
+          "allowFirstLine": false
+        }
+      }],
   }
 };

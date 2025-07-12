@@ -62,18 +62,19 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, nextTick } from "vue";
-import { useStore } from "vuex";
-import { GlobalDataProps } from "../store";
-import { omit } from "lodash-es";
-import HelloWorld from "../components/HelloWorld.vue";
-import LText from "../components/LText.vue";
-import ComponentsList from "../components/ComponentsList.vue";
-import EditWrapper from "../components/EditWrapper.vue";
-import { ComponentData } from "../store/editor";
-import PropsTable from "../components/propsTable.vue";
-import LayerList from "../components/LayerList.vue";
-import EditGroup from "../components/EditGroup.vue";
+import { computed, defineComponent, ref, nextTick } from 'vue'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '../store'
+import { omit } from 'lodash-es'
+import HelloWorld from '../components/HelloWorld.vue'
+import LText from '../components/LText.vue'
+import ComponentsList from '../components/ComponentsList.vue'
+import EditWrapper from '../components/EditWrapper.vue'
+import { ComponentData } from '../store/editor'
+import PropsTable from '../components/propsTable.vue'
+import LayerList from '../components/LayerList.vue'
+import EditGroup from '../components/EditGroup.vue'
+import initHotKeys from '../plugins/hotKeys'
 
 export default defineComponent({
   components: {
@@ -86,32 +87,45 @@ export default defineComponent({
     EditGroup,
   },
   setup() {
-    const store = useStore<GlobalDataProps>();
-    const components = computed(() => store.state.editor.components);
+    initHotKeys()
+    const store = useStore<GlobalDataProps>()
+    const components = computed(() => store.state.editor.components)
     const addItem = (props: any) => {
-      store.commit("addComponent", props);
-    };
+      store.commit('addComponent', props)
+    }
     const setActive = (currentId: string) => {
-      store.commit("setActive", currentId);
-    };
+      store.commit('setActive', currentId)
+    }
     const currentElement = computed<ComponentData | null>(
-      () => store.getters.getCurrentElement
-    );
+      () => store.getters.getCurrentElement,
+    )
     const handleChange = (data: any) => {
-      store.commit("updateComponent", data);
-    };
+      store.commit('updateComponent', data)
+    }
     // 更新定位 left / top
     const updatePosition = ({ left, top, width, height, id }) => {
-      left &&store.commit("updateComponent", {key: "left",value: left + "px",id,});
-      top &&store.commit("updateComponent", { key: "top", value: top + "px", id });
-      width &&store.commit("updateComponent", {key: "width",value: width + "px",id,});
-      height &&store.commit("updateComponent", {key: "height",value: height + "px",id,});
-    };
-    const activeKey = ref("basic");
+      left &&
+        store.commit('updateComponent', { key: 'left', value: left + 'px', id })
+      top &&
+        store.commit('updateComponent', { key: 'top', value: top + 'px', id })
+      width &&
+        store.commit('updateComponent', {
+          key: 'width',
+          value: width + 'px',
+          id,
+        })
+      height &&
+        store.commit('updateComponent', {
+          key: 'height',
+          value: height + 'px',
+          id,
+        })
+    }
+    const activeKey = ref('basic')
 
     const getComponentProps = (props) => {
-      return omit(props, ["position", "top", "left", "width", "height"]);
-    };
+      return omit(props, ['position', 'top', 'left', 'width', 'height'])
+    }
 
     return {
       activeKey,
@@ -122,9 +136,9 @@ export default defineComponent({
       updatePosition,
       getComponentProps,
       handleChange,
-    };
+    }
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>

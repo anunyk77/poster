@@ -4,33 +4,33 @@
   </component>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue'
 import {
   textDefaultProps,
   transformToComponentProps,
   textStylePropNames,
-} from "../defaultProps";
-import useComponentCommon from "../hooks/useComponentCommon";
+} from '../defaultProps'
+import useComponentCommon from '../hooks/useComponentCommon'
 
-const defaultProps = transformToComponentProps(textDefaultProps);
+const defaultProps = transformToComponentProps(textDefaultProps)
 export default defineComponent({
-  name: "LText",
+  name: 'LText',
   props: {
     tag: {
       type: String,
-      default: "div",
+      default: 'div',
     },
     ...defaultProps,
   },
   setup(props) {
     const { styleProps, handleClick } = useComponentCommon(
       props,
-      textStylePropNames
-    );
+      textStylePropNames,
+    )
     return {
       styleProps,
       handleClick,
-    };
+    }
   },
-});
+})
 </script>

@@ -1,3 +1,5 @@
+import { textDefaultProps } from './defaultProps'
+
 const defaultTextTemplates = [
   {
     text: '大标题',
@@ -6,17 +8,14 @@ const defaultTextTemplates = [
     textDecoration: 'none',
     fontStyle: 'normal',
     tag: 'h2',
-    lineHeight: '1',
-    width: '',
-    textAlign: 'center',
-    fontFamily: '宋体',
-    color: '#000000',
-    backgroundColor: 'transparent',
+    width: '100px',
+    height: '40px'
   },
   {
     text: '正文内容',
     tag: 'p',
     width: '100px',
+    height: '40px'
   },
   {
     text: '链接内容',
@@ -24,64 +23,28 @@ const defaultTextTemplates = [
     textDecoration: 'underline',
     tag: 'p',
     width: '100px',
+    height: '40px'
   },
-  // {
-  //   text: '按钮内容',
-  //   color: '#ffffff',
-  //   backgroundColor: '#1890ff',
-  //   borderWidth: '1px',
-  //   borderColor: '#1890ff',
-  //   borderStyle: 'solid',
-  //   borderRadius: '2px',
-  //   paddingLeft: '10px',
-  //   paddingRight: '10px',
-  //   paddingTop: '5px',
-  //   paddingBottom: '5px',
-  //   width: '100px',
-  //   tag: 'button',
-  //   textAlign: 'center',
-  //   position: 'absolute',
-  // },
   {
-    // actions
-    actionType: '',
-    url: '',
-    // size
-    height: '100',
-    width: '100',
-    paddingLeft: '0',
-    paddingRight: '0',
-    paddingTop: '0',
-    paddingBottom: '0',
-    // border type
-    borderStyle: 'none',
-    borderColor: '',
-    borderWidth: '0',
-    borderRadius: '0',
-    // shadow and opacity
-    boxShadow: '0 0 0 #000000',
-    opacity: '1',
-    // position and x,y
-    // position: 'absolute',
-    // left: '0',
-    // top: '0',
-    // right: '0',
-    position: '',
-    left: '',
-    top: '',
-    right: '',
-    text: '包含全部内容',
-    fontSize: '14px',
-    fontFamily: '',
-    fontWeight: 'normal',
-    fontStyle: '',
-    textDecoration: 'none',
-    lineHeight: '1',
-    textAlign: 'left',
-    color: '#000000',
-    backgroundColor: '',
-    src: 'test.url',
-  }
+    text: '按钮内容',
+    color: '#ffffff',
+    backgroundColor: '#1890ff',
+    borderWidth: '1px',
+    borderColor: '#1890ff',
+    borderStyle: 'solid',
+    borderRadius: '2px',
+    paddingLeft: '10px',
+    paddingRight: '10px',
+    paddingTop: '5px',
+    paddingBottom: '5px',
+    width: '100px',
+    height: '40px',
+    tag: 'button',
+    textAlign: 'center',
+    position: 'absolute',
+  },
 ]
 
-export default defaultTextTemplates
+export default defaultTextTemplates.map(item => {
+  return { ...textDefaultProps, ...item }
+})

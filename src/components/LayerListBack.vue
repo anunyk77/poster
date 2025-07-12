@@ -43,18 +43,17 @@
   </ul>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, reactive, ref, watch } from "vue";
-import { arrayMoveMutable } from "array-move";
-import { ComponentData } from "../store/editor";
+import { defineComponent, PropType, reactive, ref, watch } from 'vue'
+import { arrayMoveMutable } from 'array-move'
+import { ComponentData } from '../store/editor'
 import {
   EyeOutlined,
   EyeInvisibleOutlined,
   LockOutlined,
   UnlockOutlined,
-} from "@ant-design/icons-vue";
-import InlineEdit from "./InlineEdit.vue";
-import { getParentElement } from "../hooks/helper";
-import test from "node:test";
+} from '@ant-design/icons-vue'
+import InlineEdit from './InlineEdit.vue'
+import { getParentElement } from '../hooks/helper'
 
 export default defineComponent({
   props: {
@@ -76,42 +75,41 @@ export default defineComponent({
   },
   setup(props, ctx) {
     const handleClick = (id: string) => {
-      ctx.emit("select", id);
-    };
+      ctx.emit('select', id)
+    }
     const hangleChange = (id: string, key: string, value: boolean) => {
       const data = {
         id,
         key,
         value,
         isRoot: true,
-      };
-      ctx.emit("change", data);
-    };
+      }
+      ctx.emit('change', data)
+    }
 
     const dragData = reactive({
-      currentDragging: "",
+      currentDragging: '',
       currnetIndex: -1,
-    });
+    })
     const onDragStart = (e: Event, id: string, index) => {
-      dragData.currentDragging = id;
-      dragData.currnetIndex = index;
-    };
+      dragData.currentDragging = id
+      dragData.currnetIndex = index
+    }
     // 移入时触发
     const onDragEnter = (e: DragEvent, index: number) => {
       if (dragData.currnetIndex !== index) {
-        console.log(dragData.currnetIndex, index);
+        console.log(dragData.currnetIndex, index)
         /**
          * 直接在组件内修改了属性，不是单向数据流，
          * 可以在组件内创建新数组，
          */
-        arrayMoveMutable(props.list, dragData.currnetIndex, index);
+        arrayMoveMutable(props.list, dragData.currnetIndex, index)
 
-        dragData.currnetIndex = index;
+        dragData.currnetIndex = index
       }
-    };
+    }
     // 松开时触发元素的移动
     const onDrag = (e: Event) => {
-      // git test
       // const currentEle = getParentElement(
       //   e.target as HTMLElement,
       //   "layer-item"
@@ -129,11 +127,11 @@ export default defineComponent({
       //   // props.list.splice(fromIndex, 1);
       //   // props.list.splice(toIndex, 0, item);
       // }
-      dragData.currentDragging = "";
-    };
+      dragData.currentDragging = ''
+    }
     const onDragOver = (e) => {
-      e.preventDefault();
-    };
+      e.preventDefault()
+    }
 
     return {
       handleClick,
@@ -143,9 +141,9 @@ export default defineComponent({
       onDragStart,
       onDragOver,
       onDrag,
-    };
+    }
   },
-});
+})
 </script>
 <style lang="scss" scoped>
 .layer-list {
