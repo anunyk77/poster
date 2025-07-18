@@ -5,6 +5,42 @@
         <components-list @onItemClick="addItem" />
       </a-layout-sider>
       <a-layout class="editor-container">
+        <ul>
+          <li v-for="(item, index) in historyArr">
+            <span
+              :style="{ 'font-weight': index === historyIndex ? 'bold' : '' }"
+            >
+              <template v-if="item.type === 'modify'">
+                {{ item.type }} - {{ item.data.key }} -
+                {{ item.data.oldValue }}-
+                {{ item.data.newValue }}
+              </template>
+              <template v-else>
+                {{ item.type }} - {{ item.componentId }}
+              </template>
+            </span>
+          </li>
+        </ul>
+        <div style="text-align: right">
+          <a-space>
+            <a-button
+              shape="cricle"
+              :disabled="undoIsDisabled"
+              @click="handleUndo"
+            >
+              撤回
+              <template #icon><UndoOutlined /></template>
+            </a-button>
+            <a-button
+              shape="cricle"
+              :disabled="redoIsDisabled"
+              @click="handleRedo"
+            >
+              重做
+              <template #icon><RedoOutlined /></template>
+            </a-button>
+          </a-space>
+        </div>
         <div class="editor-warp">
           <edit-wrapper
             @setActive="setActive(component.id)"
@@ -62,12 +98,13 @@
 </template>
 
 <script lang="ts">
+import { RedoOutlined, UndoOutlined } from '@ant-design/icons-vue'
 import { computed, defineComponent, ref, nextTick } from 'vue'
 import { useStore } from 'vuex'
 import { GlobalDataProps } from '../store'
-import { omit } from 'lodash-es'
-import HelloWorld from '../components/HelloWorld.vue'
+import { omit, pickBy } from 'lodash-es'
 import LText from '../components/LText.vue'
+import HelloWorld from '../components/HelloWorld.vue'
 import ComponentsList from '../components/ComponentsList.vue'
 import EditWrapper from '../components/EditWrapper.vue'
 import { ComponentData } from '../store/editor'
@@ -85,6 +122,8 @@ export default defineComponent({
     PropsTable,
     LayerList,
     EditGroup,
+    RedoOutlined,
+    UndoOutlined,
   },
   setup() {
     initHotKeys()
@@ -103,28 +142,43 @@ export default defineComponent({
       store.commit('updateComponent', data)
     }
     // 更新定位 left / top
-    const updatePosition = ({ left, top, width, height, id }) => {
-      left &&
-        store.commit('updateComponent', { key: 'left', value: left + 'px', id })
-      top &&
-        store.commit('updateComponent', { key: 'top', value: top + 'px', id })
-      width &&
-        store.commit('updateComponent', {
-          key: 'width',
-          value: width + 'px',
-          id,
-        })
-      height &&
-        store.commit('updateComponent', {
-          key: 'height',
-          value: height + 'px',
-          id,
-        })
+    const updatePosition = (data: {
+      left: number
+      top: number
+      width: number
+      height: number
+      id: string
+    }) => {
+      const { id } = data
+      const updatedData = pickBy(data, (v, k) => k !== 'id')
+      // key value 转成 数组形式传递 { key: ['left', 'top'], value: ['10px', '20px'] }
+      const keysArr = Object.keys(updatedData)
+      const valuesArr = Object.values(updatedData).map((v) => v + 'px')
+      store.commit('updateComponent', { key: keysArr, value: valuesArr, id })
     }
     const activeKey = ref('basic')
 
     const getComponentProps = (props) => {
       return omit(props, ['position', 'top', 'left', 'width', 'height'])
+    }
+
+    const historyArr = computed(() => store.state.editor.historyArr)
+    const historyIndex = computed(() => store.state.editor.historyIndex)
+
+    const undoIsDisabled = computed<boolean>(
+      () => store.getters.checkUndoDisable,
+    )
+    const redoIsDisabled = computed<boolean>(
+      () => store.getters.checkRedoDisable,
+    )
+
+    // 撤回
+    const handleUndo = () => {
+      store.commit('undo')
+    }
+    // 重做
+    const handleRedo = () => {
+      store.commit('redo')
     }
 
     return {
@@ -136,6 +190,12 @@ export default defineComponent({
       updatePosition,
       getComponentProps,
       handleChange,
+      handleUndo,
+      handleRedo,
+      historyArr,
+      historyIndex,
+      undoIsDisabled,
+      redoIsDisabled,
     }
   },
 })
